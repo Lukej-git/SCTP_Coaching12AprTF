@@ -253,7 +253,7 @@ output "vpc_a_id" {
 # created image.
 
 resource "aws_ecr_repository" "ecr_repo" {
-  name                 = "${var.local_prefix}-ecr" # Change it accordingly
+  name                 = "${var.local_prefix}_ecr" # Change it accordingly
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
