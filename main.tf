@@ -33,33 +33,33 @@ resource "aws_subnet" "private_subnet_a" {
 }
 
 # # Internet Gateway for VPC A
-# resource "aws_internet_gateway" "igw_a" {
-#   vpc_id = aws_vpc.vpc_a.id
+resource "aws_internet_gateway" "igw_a" {
+  vpc_id = aws_vpc.vpc_a.id
 
-#   tags = {
-#     Name = "${var.local_prefix}-igw-a"
-#   }
-# }
+  tags = {
+    Name = "${var.local_prefix}-igw-a"
+  }
+}
 
 # Public Route Table for VPC A
-# resource "aws_route_table" "public_rt_a" {
-#   vpc_id = aws_vpc.vpc_a.id
+resource "aws_route_table" "public_rt_a" {
+  vpc_id = aws_vpc.vpc_a.id
 
-#   route {
-#     cidr_block = "0.0.0.0/0"
-#     gateway_id = aws_internet_gateway.igw_a.id
-#   }
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw_a.id
+  }
 
-#   tags = {
-#     Name = "${var.local_prefix}-public-rt-a"
-#   }
-# }
+  tags = {
+    Name = "${var.local_prefix}-public-rt-a"
+  }
+}
 
 # # Associate Public Subnet A with Route Table
-# resource "aws_route_table_association" "rt_assoc_a" {
-#   subnet_id      = aws_subnet.public_subnet_a.id
-#   route_table_id = aws_route_table.public_rt_a.id
-# }
+resource "aws_route_table_association" "rt_assoc_a" {
+  subnet_id      = aws_subnet.public_subnet_a.id
+  route_table_id = aws_route_table.public_rt_a.id
+}
 
 # ---------------------------
 # VPC B (10.2.0.0/16) - SECONDARY VPC
@@ -253,7 +253,7 @@ output "vpc_a_id" {
 # created image.
 
 resource "aws_ecr_repository" "ecr_repo" {
-  name                 = "${var.local_prefix}_ecr" # Change it accordingly
+  name                 = "lachecr" # Change it accordingly
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
