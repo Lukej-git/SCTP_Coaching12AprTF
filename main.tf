@@ -245,3 +245,41 @@ output "vpc_a_id" {
 # output "ec2b_sg" {
 #   value = aws_instance.public_ec2-b.id
 # }
+
+# Use this to create your own ecr private registry
+# Afterwards, you may also add in a Dockerfile to create a Docker image
+# and push the image to your private registry
+# You can then replace task definition > image to point to your 
+# created image.
+
+resource "aws_ecr_repository" "ecr_repo" {
+  name                 = "${var.local_prefix}-ecr" # Change it accordingly
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  force_delete = true # this would allow my ecr to be removed forcefully
+}
+
+resource "aws_ecr_lifecycle_policy" "ecr_policy" {
+  repository = aws_ecr_repository.ecr_repo.name
+
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description  = "Keep only the last 3 images"
+        selection = {
+          tagStatus     = "any"
+          countType     = "imageCountMoreThan"
+          countNumber   = 3
+        }
+        action = {
+          type = "expire"
+        }
+      }
+    ]
+  })
+}
